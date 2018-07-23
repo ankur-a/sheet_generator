@@ -41,6 +41,7 @@ public class CommonSheetDetails {
 	}
 	
 	public HashMap <String , String> getNameAssociation(String district){
+		genLocassociation();
 		HashMap< String, String> blockShapeMap = new HashMap<>();
 //		List <String> districtBlockName = (List<String>) locassociation.keySet();
 		

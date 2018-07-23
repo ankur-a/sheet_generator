@@ -16,8 +16,7 @@ import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 
 public class Sheet1  {
-	
-	
+	BasicData basicData = new BasicData();
 	
 	
 	
@@ -63,9 +62,9 @@ public class Sheet1  {
 		
 	}
 	
-	public void createBasicDataSheet(String district , Header head) {
+	public void createBasicDataSheet(String district , Header head , HashMap <String , BasicData > basicDataMap ) {
 		writeHeader(head);
-		
+		basicData.scrapRockType(basicDataMap);
 		
 		
 		
@@ -83,6 +82,7 @@ public class Sheet1  {
 			BasicData basicData1 = new BasicData();
 			basicData1.setDistrict("Agra");
 			basicData1.setState("Uttar Pradesh");
+			basicData1.setYield(0.16);
 			basicDataMap.put(locationNameMap.get(location), basicData1);
 		}
 		
@@ -90,29 +90,29 @@ public class Sheet1  {
 		
 		
 		
-		FileInputStream fsIP= new FileInputStream(new File("1.xlsx")); //Read the spreadsheet that needs to be updated
-		XSSFWorkbook wb = new XSSFWorkbook(fsIP); //Access the workbook
-		XSSFSheet worksheet = wb.getSheetAt(0); //Access the worksheet, so that we can update / modify it.
-        XSSFFont font = wb.createFont();
-        font.setBold(true);
-        XSSFCellStyle style = wb.createCellStyle();
-        style.setFont(font);
-        Cell cell = null; // declare a Cell object
-        
-        cell = worksheet.getRow(0).getCell(1);   // Access the second cell in second row to update the value
-          
-        cell.setCellValue("OverRide Last Name");  // Get current cell value value and overwrite the value
-        cell.setCellStyle(style);
-        fsIP.close(); //Close the InputStream
-         
-        FileOutputStream output_file =new FileOutputStream(new File("1.xlsx"));  //Open FileOutputStream to write updates
-          
-        wb.write(output_file); //write changes
-          
-        output_file.close();  //close the stream  
+//		FileInputStream fsIP= new FileInputStream(new File("1.xlsx")); //Read the spreadsheet that needs to be updated
+//		XSSFWorkbook wb = new XSSFWorkbook(fsIP); //Access the workbook
+//		XSSFSheet worksheet = wb.getSheetAt(0); //Access the worksheet, so that we can update / modify it.
+//        XSSFFont font = wb.createFont();
+//        font.setBold(true);
+//        XSSFCellStyle style = wb.createCellStyle();
+//        style.setFont(font);
+//        Cell cell = null; // declare a Cell object
+//        
+//        cell = worksheet.getRow(0).getCell(1);   // Access the second cell in second row to update the value
+//          
+//        cell.setCellValue("OverRide Last Name");  // Get current cell value value and overwrite the value
+//        cell.setCellStyle(style);
+//        fsIP.close(); //Close the InputStream
+//         
+//        FileOutputStream output_file =new FileOutputStream(new File("1.xlsx"));  //Open FileOutputStream to write updates
+//          
+//        wb.write(output_file); //write changes
+//          
+//        output_file.close();  //close the stream  
         
         Sheet1 sh = new Sheet1();
-        sh.createBasicDataSheet("Agra", head);
+        sh.createBasicDataSheet("Agra", head , basicDataMap);
         
 	}
 	

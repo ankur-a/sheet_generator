@@ -1,7 +1,23 @@
 package sheet_generator;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
+
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 public class BasicData {
-	
+	CommonSheetDetails commonSheetDetails = new CommonSheetDetails();
+	HashMap <String , String> locationNameMap = commonSheetDetails.getNameAssociation("Agra");
+	public String state;
 	public String getState() {
 		return state;
 	}
@@ -20,108 +36,148 @@ public class BasicData {
 	public void setRockType(String rockType) {
 		this.rockType = rockType;
 	}
-	public float getYield() {
+	public double getYield() {
 		return yield;
 	}
-	public void setYield(float yield) {
+	public void setYield(double yield) {
 		this.yield = yield;
 	}
-	public float getInfFactor() {
+	public double getInfFactor() {
 		return infFactor;
 	}
-	public void setInfFactor(float infFactor) {
+	public void setInfFactor(double infFactor) {
 		this.infFactor = infFactor;
 	}
-	public float getTotalGArea() {
+	public double getTotalGArea() {
 		return totalGArea;
 	}
-	public void setTotalGArea(float totalGArea) {
+	public void setTotalGArea(double totalGArea) {
 		this.totalGArea = totalGArea;
 	}
-	public float getTotalGComArea() {
+	public double getTotalGComArea() {
 		return totalGComArea;
 	}
-	public void setTotalGComArea(float totalGComArea) {
+	public void setTotalGComArea(double totalGComArea) {
 		this.totalGComArea = totalGComArea;
 	}
-	public float getTotalGNComArea() {
+	public double getTotalGNComArea() {
 		return totalGNComArea;
 	}
-	public void setTotalGNComArea(float totalGNComArea) {
+	public void setTotalGNComArea(double totalGNComArea) {
 		this.totalGNComArea = totalGNComArea;
 	}
-	public float getPoorQualityG() {
+	public double getPoorQualityG() {
 		return poorQualityG;
 	}
-	public void setPoorQualityG(float poorQualityG) {
+	public void setPoorQualityG(double poorQualityG) {
 		this.poorQualityG = poorQualityG;
 	}
-	public float getTotalNArea() {
+	public double getTotalNArea() {
 		return totalNArea;
 	}
-	public void setTotalNArea(float totalNArea) {
+	public void setTotalNArea(double totalNArea) {
 		this.totalNArea = totalNArea;
 	}
-	public float getTotalNComArea() {
+	public double getTotalNComArea() {
 		return totalNComArea;
 	}
-	public void setTotalNComArea(float totalNComArea) {
+	public void setTotalNComArea(double totalNComArea) {
 		this.totalNComArea = totalNComArea;
 	}
-	public float getTotalNNComArea() {
+	public double getTotalNNComArea() {
 		return totalNNComArea;
 	}
-	public void setTotalNNComArea(float totalNNComArea) {
+	public void setTotalNNComArea(double totalNNComArea) {
 		this.totalNNComArea = totalNNComArea;
 	}
-	public float getPoorQualityN() {
+	public double getPoorQualityN() {
 		return poorQualityN;
 	}
-	public void setPoorQualityN(float poorQualityN) {
+	public void setPoorQualityN(double poorQualityN) {
 		this.poorQualityN = poorQualityN;
 	}
-	public float getTotalRArea() {
+	public double getTotalRArea() {
 		return totalRArea;
 	}
-	public void setTotalRArea(float totalRArea) {
+	public void setTotalRArea(double totalRArea) {
 		this.totalRArea = totalRArea;
 	}
-	public float getTotalRComArea() {
+	public double getTotalRComArea() {
 		return totalRComArea;
 	}
-	public void setTotalRComArea(float totalRComArea) {
+	public void setTotalRComArea(double totalRComArea) {
 		this.totalRComArea = totalRComArea;
 	}
-	public float getTotalRNComArea() {
+	public double getTotalRNComArea() {
 		return totalRNComArea;
 	}
-	public void setTotalRNComArea(float totalRNComArea) {
+	public void setTotalRNComArea(double totalRNComArea) {
 		this.totalRNComArea = totalRNComArea;
 	}
-	public float getPoorQualityR() {
+	public double getPoorQualityR() {
 		return poorQualityR;
 	}
-	public void setPoorQualityR(float poorQualityR) {
+	public void setPoorQualityR(double poorQualityR) {
 		this.poorQualityR = poorQualityR;
 	}
-	public String state;
 	public String District;
 	public String rockType;
-	public float yield;
-	public float infFactor;
-	public float totalGArea;
-	public float totalGComArea;
-	public float totalGNComArea;
-	public float poorQualityG;
-	public float totalNArea;
-	public float totalNComArea;
-	public float totalNNComArea;
-	public float poorQualityN;
-	public float totalRArea;
-	public float totalRComArea;
-	public float totalRNComArea;
-	public float poorQualityR;
+	public double yield;
+	public double infFactor;
+	public double totalGArea;
+	public double totalGComArea;
+	public double totalGNComArea;
+	public double poorQualityG;
+	public double totalNArea;
+	public double totalNComArea;
+	public double totalNNComArea;
+	public double poorQualityN;
+	public double totalRArea;
+	public double totalRComArea;
+	public double totalRNComArea;
+	public double poorQualityR;
 	
+	
+	public void scrapRockType(HashMap <String , BasicData > basicDataMap) {
+		try {
+			FileInputStream fsIP= new FileInputStream(new File("GWSR 31-03-2013 Agra-R.xls"));
+			HSSFWorkbook wb = new HSSFWorkbook(fsIP);
+			for(int i=0 ; i< wb.getNumberOfSheets();i++) {
+				HSSFSheet sheet = wb.getSheetAt(i);
+				String name = sheet.getSheetName();
+				System.out.println(wb.getNumberOfSheets() + "\n");
+				
+				if(name.equals("Basic-SY,RFI")){
+					
+					int count =0;
+					for(Row mrow : sheet) {
+						if(count<8) {
+							count++;
+							continue;
+						}
+						Cell blockName = mrow.getCell(1);
+						Cell rockName = mrow.getCell(3);
+						BasicData basicData = basicDataMap.get(locationNameMap.get(blockName.getStringCellValue()));
+						System.out.println(blockName.getStringCellValue());
+//						if(rockName!=null)
+						basicData.setRockType(rockName.getStringCellValue());
+//						else
+//						basicData.setRockType("Alluvial Sandy Area");
+						System.out.println(basicDataMap.get(locationNameMap.get(blockName.getStringCellValue())).getRockType() + blockName.getStringCellValue()+ "\n");
+					}
+				}
+			}
+			
+			fsIP.close();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+	}
 	
 
 }
