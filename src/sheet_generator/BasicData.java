@@ -7,14 +7,23 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import javax.xml.bind.ParseConversionEvent;
+
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class BasicData {
+	
+
+	static DataFormatter dataFormatter = new DataFormatter();
+	static String getStringValue(Cell cell) {
+	    return dataFormatter.formatCellValue(cell);
+	}
 	CommonSheetDetails commonSheetDetails = new CommonSheetDetails();
 	HashMap <String , String> locationNameMap = commonSheetDetails.getNameAssociation("Agra");
 	public String state;
@@ -145,7 +154,7 @@ public class BasicData {
 			for(int i=0 ; i< wb.getNumberOfSheets();i++) {
 				HSSFSheet sheet = wb.getSheetAt(i);
 				String name = sheet.getSheetName();
-				System.out.println(wb.getNumberOfSheets() + "\n");
+				System.out.println(name + "\n");
 				
 				if(name.equals("Basic-SY,RFI")){
 					
@@ -155,15 +164,15 @@ public class BasicData {
 							count++;
 							continue;
 						}
+						System.out.println(mrow.toString());
 						Cell blockName = mrow.getCell(1);
 						Cell rockName = mrow.getCell(3);
+						if(getStringValue(blockName).contains("TOTAL")) return;
 						BasicData basicData = basicDataMap.get(locationNameMap.get(blockName.getStringCellValue()));
-						System.out.println(blockName.getStringCellValue());
-//						if(rockName!=null)
-						basicData.setRockType(rockName.getStringCellValue());
+						basicData.setRockType(getStringValue(rockName));
 //						else
 //						basicData.setRockType("Alluvial Sandy Area");
-						System.out.println(basicDataMap.get(locationNameMap.get(blockName.getStringCellValue())).getRockType() + blockName.getStringCellValue()+ "\n");
+						System.out.println(basicDataMap.get(locationNameMap.get(blockName.getStringCellValue())).getRockType() + locationNameMap.get(blockName.getStringCellValue())+ "\n");
 					}
 				}
 			}
@@ -174,7 +183,45 @@ public class BasicData {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
 		
+		public void scrapinfFactor(HashMap <String , BasicData > basicDataMap) {
+			try {
+				FileInputStream fsIP= new FileInputStream(new File("GWSR 31-03-2013 Agra-R.xls"));
+				HSSFWorkbook wb = new HSSFWorkbook(fsIP);
+				for(int i=0 ; i< wb.getNumberOfSheets();i++) {
+					HSSFSheet sheet = wb.getSheetAt(i);
+					String name = sheet.getSheetName();
+					System.out.println(name + "\n");
+					
+					if(name.equals("IIIC")){
+						
+						int count =0;
+						for(Row mrow : sheet) {
+							if(count<9) {
+								count++;
+								continue;
+							}
+							System.out.println(mrow.toString());
+							Cell blockName = mrow.getCell(1);
+							Cell infFactor = mrow.getCell(6);
+							if(getStringValue(blockName).contains("TOTAL")) return;
+							BasicData basicData = basicDataMap.get(locationNameMap.get(blockName.getStringCellValue()));
+							basicData.setInfFactor(Double.parseDouble(getStringValue(infFactor)));
+//							else
+//							basicData.setRockType("Alluvial Sandy Area");
+							System.out.println(basicDataMap.get(locationNameMap.get(blockName.getStringCellValue())).getRockType() + locationNameMap.get(blockName.getStringCellValue())+ "\n");
+						}
+					}
+				}
+				
+				fsIP.close();
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 		
 		
 	}

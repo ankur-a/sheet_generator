@@ -65,6 +65,7 @@ public class Sheet1  {
 	public void createBasicDataSheet(String district , Header head , HashMap <String , BasicData > basicDataMap ) {
 		writeHeader(head);
 		basicData.scrapRockType(basicDataMap);
+		basicData.scrapinfFactor(basicDataMap);
 		
 		
 		
