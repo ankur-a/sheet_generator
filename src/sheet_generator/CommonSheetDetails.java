@@ -17,6 +17,7 @@ public class CommonSheetDetails {
 	
 	public void genLocassociation() {
 		try {
+			if(locassociation!= null) return ;
 			locassociation = new HashMap<>();
 			FileInputStream file = new FileInputStream(new File("Master mapping data UP.xlsx"));
 			XSSFWorkbook wb = new XSSFWorkbook(file);
